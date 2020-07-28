@@ -8,30 +8,40 @@
             :left="left"
             :multi-line="multiLine"
             :right="right"
-            :timeout="timeout"
             :top="top"
             :value="i === 0"
             :vertical="vertical"
             v-for="(item, i) in items"
         >
-            {{ item.message }}
-            <v-btn
-                :color="nextButtonColor"
-                @click="removeItem(item.id)"
-                text
-                v-if="items.length > 1"
-            >
-                {{nextButtonText}} ({{items.length - 1}} more)
-            </v-btn>
-            <v-btn
-                :color="closeButtonColor"
-                @click="removeItem(item.id)"
-                text
-                icon
-                v-else
-            >
-                <v-icon>{{closeButtonIcon}}</v-icon>
-            </v-btn>
+            <v-row align="center" justify="space-between">
+                <v-col cols="1">
+                    <v-icon color="secondary">{{ item.icon }}</v-icon>
+                </v-col>
+                <v-col cols="9">{{ item.message }}</v-col>
+                <v-col class="d-flex justify-end" cols="2">
+                    <v-btn
+                        v-if="items.length > 1"
+                        class="pr-0 mr-0"
+                        :color="nextButtonColor"
+                        @click="removeItem(item.id)"
+                        text
+                        small
+                    >
+                        {{nextButtonText}} ({{items.length - 1}} more)
+                    </v-btn>
+                    <v-btn
+                        :color="closeButtonColor"
+                        @click="removeItem(item.id)"
+                        :text="closeButtonText !== ''"
+                        :icon="closeButtonText === ''"
+                        small
+                        v-else
+                    >
+                        <v-icon v-if="closeButtonText === ''">{{closeButtonIcon}}</v-icon>
+                        <span v-else>{{closeButtonText}}</span>
+                    </v-btn>
+                </v-col>
+            </v-row>
         </v-snackbar>
     </div>
 </template>
@@ -83,6 +93,13 @@
             closeButtonIcon: {
                 type: String,
                 default: 'close'
+            },
+            /**
+             * The text to display in the close button
+             */
+            closeButtonText: {
+                type: String,
+                default: null
             },
             /**
              * Array for items to display [{id: '', color: '', message: ''}]
